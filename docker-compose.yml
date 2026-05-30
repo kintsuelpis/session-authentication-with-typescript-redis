@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb_instance
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis_instance
+    # REMOVED the --requirepass command entirely. Redis is now open.
+    ports:
+      - "6379:6379"
+
+  app1:
+    build: .
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/auth_db
+      - PORT=8080
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      # REMOVED REDIS_PASSWORD
+      - SESSION_TTL_SECONDS=2000
+      - APP_INSTANCE_NAME=Server_1
+    depends_on:
+      - mongodb
+      - redis
+
+  app2:
+    build: .
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/auth_db
+      - PORT=8080
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      # REMOVED REDIS_PASSWORD
+      - SESSION_TTL_SECONDS=2000
+      - APP_INSTANCE_NAME=Server_2
+    depends_on:
+      - mongodb
+      - redis
+
+  app3:
+    build: .
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/auth_db
+      - PORT=8080
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      # REMOVED REDIS_PASSWORD
+      - SESSION_TTL_SECONDS=2000
+      - APP_INSTANCE_NAME=Server_3
+    depends_on:
+      - mongodb
+      - redis
+
+  nginx_lb:
+    image: nginx:alpine
+    container_name: load_balancer
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+    depends_on:
+      - app1
+      - app2
+      - app3
+
+volumes:
+  mongo-data:
