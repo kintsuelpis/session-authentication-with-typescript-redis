@@ -2,10 +2,12 @@
   "name": "session-authentication-with-typescript-redis",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node ./dist/server.js"
+    "build": "tsc",
+    "dev": "tsx src/server.ts",
+    "start": "node dist/server.js"
   },
   "keywords": [],
   "author": "",
