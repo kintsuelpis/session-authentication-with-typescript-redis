@@ -3,6 +3,9 @@ import connectDB from "./config/db.config.js"
 import { config } from "dotenv"
 import cookieParser from "cookie-parser"
 import authRouter from './routes/auth.routes.js'
+import { authMiddleware } from "./middleware/auth.middleware.js"
+import dashboardRouter from './routes/dashboard.routes.js'
+import cors from "cors"
 
 config()
 
@@ -14,9 +17,18 @@ connectDB().then(()=>{
 
     app.use(express.json())
     app.use(cookieParser())
+    
+    
+    
+    app.use(cors({
+        origin:"http://localhost:5173",
+        credentials:true
+    }))
 
     // Authentication routes
     app.use('/auth',authRouter)
+
+    app.use('/dashboard',authMiddleware,dashboardRouter)
 
     app.listen(PORT,()=>{
         console.log(`server started running on port : ${PORT}`)
