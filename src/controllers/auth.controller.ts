@@ -85,7 +85,7 @@ export const loginController = async(req : Request, res : Response)=>{
         
         res.cookie("sid",sessionId,{
             httpOnly:true,
-            sameSite:"strict",
+            sameSite:"lax",
             maxAge : Number(process.env.SESSION_TTL_SECONDS ?? 604800)*1000,
             path:"/"
         })
