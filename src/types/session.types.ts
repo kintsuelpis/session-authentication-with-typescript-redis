@@ -10,10 +10,20 @@ export interface SessionData{
     lastAccessedAt: number
 }
 
-declare global{
-    namespace Express{
-        interface Request{
-            session? : SessionData & {sessionId : string}
+declare global {
+    namespace Express {
+        interface Request {
+            user?: {
+                userId: string;
+                email: string;
+                username: string;
+            };
+
+            session?: {
+                sessionId: string;
+                createdAt: number;
+                lastAccessedAt: number;
+            };
         }
     }
 }
