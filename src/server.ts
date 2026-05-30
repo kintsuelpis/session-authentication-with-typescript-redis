@@ -18,6 +18,11 @@ connectDB().then(()=>{
     app.use(express.json())
     app.use(cookieParser())
     
+    app.use((req, res, next) => {
+        const instance = process.env.APP_INSTANCE_NAME || "Unknown_Server";
+        console.log(`[${instance}] Handled request for: ${req.method} ${req.url}`);
+        next();
+    });
     
     
     app.use(cors({
